@@ -20,25 +20,16 @@ pygame.display.set_icon(icon)
 player_icon = pygame.image.load('duck.png')
 playerX = 300
 playerY = 550
+JUMP = 50
 jumping = False
-jumping_count = 10
 
 #events and jump
-def jump(player):
-    global jumping
-    global jumping_count
+def jump():
     global playerY
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
-        jumping = True
-    else:
-        if jumping_count >= -10:
-            playerY -= (jumping_count ** 2) * 0.5
-            jumping_count -= 1
-        else:
-            jumping = False
-            jumping_count = 10
-
+        jumping =True
+        playerY -= JUMP
 
 def event():
     for event in pygame.event.get():
@@ -46,10 +37,10 @@ def event():
             pygame.quit()
             sys.exit()
 
-duck = window.blit(player_icon, (playerX, playerY))
 
 #game loop
 while True:
     event()
-    jump(duck)
+    jump()
+    duck = window.blit(player_icon, (playerX, playerY))
     pygame.display.update()
