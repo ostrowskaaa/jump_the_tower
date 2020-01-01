@@ -24,7 +24,7 @@ class PlatformController:
 			change = int(math.sqrt(score))
 		else:
 			change = MAX_JUMP-1
-		width = 200 - randrange(change, change+60)
+		width = 100 - randrange(change, change+60)
 		height = 20
 		y = 600 - index * 100
 		while True:
@@ -38,9 +38,13 @@ class PlatformController:
 		self.last_x = x
 		return Platform(x, y, width, height)
 
-	def draw(self, game_display, camera):
+	def update(self):
 		for p in self.platform_set:
-			p.draw(game_display, camera)
+			p.update()
+
+	def draw(self, window, camera):
+		for p in self.platform_set:
+			p.draw(window, camera)
 
 	def collide_set(self, player):
 		for i,p in enumerate(self.platform_set):

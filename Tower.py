@@ -61,6 +61,7 @@ while True:
                     player.vel_y = -JUMP_VELOCITY
 
         player.update()
+        platform_controller.update()
         player.collide_platform(floor,0)
         platform_controller.collide_set(player)
         platform_controller.score = player.score
