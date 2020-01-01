@@ -36,6 +36,7 @@ def reinit():
     floor = Platform(0, H-36, W, 36)
 
 player = Player()
+player.icon('duck.png')
 platform_controller = PlatformController()
 floor = Platform(0, H-36, W, 36)
 
@@ -56,22 +57,23 @@ while True:
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_SPACE]:
             if player.on_any_platform(platform_controller, floor):
-                player.sprite_index_y = 3
                 if player.vel_y >= JUMP_VELOCITY/2:
                     player.vel_y = -JUMP_VELOCITY
-            if player.fallen_off_screen(camera):
-                window.fill(black)
-                if event.type == pygame.K_SPACE:
-                    reinit()
 
         player.update()
-        player.combo()
         player.collide_platform(floor,0)
         platform_controller.collide_set(player)
         platform_controller.score = player.score
         camera.update(player.score)
         platform_controller.generate_new_platforms(camera)
 
+        if player.fallen_off_screen(camera):
+            window.fill(black)
+
+        window.fill(background)
+        floor.draw(window, camera)
+        platform_controller.draw(window, camera)
+        player.draw(window, camera)
 
         pygame.display.update()
         clock.tick(fps)

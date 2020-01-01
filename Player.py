@@ -5,9 +5,9 @@ from copy import deepcopy
 H = 600
 W = 650
 GRAVITY = 1
-player_icon = pygame.image.load('duck.png')
-playerX = 300
-playerY = 550
+background = (123, 174, 163)
+window = pygame.display.set_mode((H, W))
+window.fill(background)
 
 class Player:
 	width = 30
@@ -21,12 +21,17 @@ class Player:
 
 	def __init__(self):
 		self.x = 30
-		self.y = 500
-		self.score = -10 # negate floor platform
+		self.y = 550
+		self.player_icon = None
+		self.rect = None
+		self.score = -10
 
-		self.player_icon = pygame.image.load('duck.png')
-		self.player_icon = pygame.Surface((33, 57), pygame.SRCALPHA, 32)
-		self.player_icon.blit(self.player_icon, (playerX, playerY), (75, 112, 33, 57))
+	def icon(self, player_icon):
+		self.player_icon = pygame.image.load(player_icon)
+		self.rect = self.player_icon.get_rect()
+
+	def draw(self, window, camera):
+		window.blit(self.player_icon, (self.x, self.y - camera.y))
 
 	def update(self):
 		self.x += self.vel_x
@@ -38,18 +43,6 @@ class Player:
 			self.x = 0
 		if self.x + self.width >= W:
 			self.x = W - self.width
-
-	def combo(self):
-		if self.x == 0:
-			if self.vel_y < 0:
-				if self.vel_x < 0:
-					self.vel_y -= 10
-					self.vel_x *= -2.5
-		if self.x + self.width >= W:
-			if self.vel_y < 0:
-				if self.vel_x > 0:
-					self.vel_y -= 10
-					self.vel_x *= -2.5
 
 	def on_platform(self, platform):
 		# return platform.rect.top <= self.y + self.height
@@ -76,8 +69,8 @@ class Player:
 							self.score = index * 10
 						platform.collected_score = True
 
-	def get_rect(self):
-		return pygame.Rect(self.x, self.y, self.width, self.height)
+#	def get_rect(self):
+#		return pygame.Rect(self.x, self.y, self.width, self.height)
 
 	def fallen_off_screen(self, camera):
 		if self.y - camera.y + self.height >= H:
