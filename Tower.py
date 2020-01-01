@@ -36,7 +36,7 @@ def reinit():
     floor = Platform(0, H-36, W, 36)
 
 player = Player()
-player.icon('duck.png')
+player.icon('duck-player.png')
 platform_controller = PlatformController()
 floor = Platform(0, H-36, W, 36)
 
