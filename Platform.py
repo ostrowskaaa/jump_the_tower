@@ -3,7 +3,7 @@ pygame.init()
 from copy import deepcopy
 
 class Platform:
-	color = (255, 100, 100)
+	color = (0, 100, 100)
 	def __init__(self, x, y, width, height):
 		self.x = x
 		self.y = y
