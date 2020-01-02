@@ -5,8 +5,8 @@ from random import getrandbits
 from Platform import Platform
 
 pygame.init()
-H = 600
-W = 650
+H = 650
+W = 600
 MAX_JUMP = 150
 
 class PlatformController:
