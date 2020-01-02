@@ -53,8 +53,7 @@ class Player:
 		for p in platform_controller.platform_set:
 			if self.on_platform(p):
 				return p
-			else:
-				return None
+		return None 
 
 	def on_platform(self, platform):
 		return platform.rect.collidepoint((self.x, self.y + self.height)) or \

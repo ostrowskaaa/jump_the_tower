@@ -3,6 +3,7 @@ from Camera import Camera
 from Player import Player
 from Platform import Platform
 from Platform_controller import PlatformController
+from pygame.locals import *
 
 #colors
 background = (123, 174, 163)
@@ -47,18 +48,29 @@ fps = 60
 
 def event():
     for event in pygame.event.get():
-        if event.type == pygame.K_ESCAPE:
-            pygame.quit()
-            sys.exit()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                game == False
+                pygame.quit()
+            # PLAYER JUMPS
+            if event.key == K_SPACE:
+                if player.on_any_platform(platform_controller, floor):
+                    if player.speed_y >= JUMP_SPEED/2:
+                        player.speed_y = -JUMP_SPEED
 
+def game_over():
+    if player.fallen_off_screen(camera) == True:
+        window.fill(black)
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    reinit()
+    return None
+
+game = True
 #game loop
-while True:
+while game:
         event()
-        keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_SPACE]:
-            if player.on_any_platform(platform_controller, floor):
-                if player.speed_y >= JUMP_SPEED/2:
-                    player.speed_y = -JUMP_SPEED
 
         platform_controller.update()
         player.collide_platform(floor,0)
@@ -68,8 +80,7 @@ while True:
         camera.update(player.score)
         platform_controller.generate_new_platforms(camera)
 
-        if player.fallen_off_screen(camera):
-            window.fill(black)
+        game_over()
 
         window.fill(background)
         floor.draw(window, camera)
