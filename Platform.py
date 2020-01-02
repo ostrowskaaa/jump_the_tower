@@ -18,6 +18,7 @@ class Platform:
 		self.collected_score = False
 
 	def update(self):
+		#going back and forth
 		if self.x + self.width < 600:
 			self.speed_x = self.direction * self.speed
 			self.x += self.speed_x

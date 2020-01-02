@@ -37,7 +37,6 @@ def reinit():
     floor = Platform(0, H-36, W, 36)
 
 player = Player()
-player.icon('duck-player.png')
 platform_controller = PlatformController()
 floor = Platform(0, H-36, W, 36)
 
@@ -59,33 +58,39 @@ def event():
                         player.speed_y = -JUMP_SPEED
 
 def game_over():
-    if player.fallen_off_screen(camera) == True:
-        window.fill(black)
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_SPACE:
-                    reinit()
-    return None
+    window = pygame.display.set_mode((W, H))
+    window.fill(black)
+    game_over_img = pygame.image.load('game-over.png')
+    window.blit(game_over_img, (W/2 - 64, H/2 - 64))
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                game == False
+                pygame.quit()
+        if event.type == KEYDOWN:
+            if event.key == K_SPACE:
+                reinit()
 
 game = True
 #game loop
 while game:
         event()
 
-        platform_controller.update()
-        player.collide_platform(floor,0)
         player.update(platform_controller)
+        player.collide_platform(floor,0)
+        platform_controller.update()
         platform_controller.collide_set(player)
         platform_controller.score = player.score
         camera.update(player.score)
         platform_controller.generate_new_platforms(camera)
 
-        game_over()
-
         window.fill(background)
         floor.draw(window, camera)
         platform_controller.draw(window, camera)
         player.draw(window, camera)
+
+        if player.fallen_off_screen(camera) == True:
+            game_over()
 
         pygame.display.update()
         clock.tick(fps)
