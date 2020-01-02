@@ -12,7 +12,7 @@ class Camera:
 		if self.player.y - self.y <= H / 2:
 			self.y = self.player.y - H /2
 		if self.player.y < H / 2:
-			change = int(math.sqrt(score))/10
+			change = int(math.sqrt(score))/70
 			if not change:
 				self.y -= 1
 			if(change<4):
