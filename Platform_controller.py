@@ -7,7 +7,6 @@ from Platform import Platform
 pygame.init()
 H = 600
 W = 650
-JUMP_VELOCITY = 15
 MAX_JUMP = 150
 
 class PlatformController:

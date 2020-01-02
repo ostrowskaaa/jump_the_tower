@@ -12,16 +12,15 @@ window.fill(background)
 class Player:
 	width = 30
 	height = 50
-	vel_x = 0
-	vel_y = 0
+	speed_x = 0
+	speed_y = 0
 	max_falling_speed = 20
 	acceleration = 0.5
-	max_vel_x = 7
-	speed = 5
+	max_speed_x = 7
 
 	def __init__(self):
-		self.x = 30
-		self.y = 550
+		self.x = W/2 - 16
+		self.y = 590
 		self.player_icon = None
 		self.rect = None
 		self.score = -10
@@ -33,19 +32,31 @@ class Player:
 	def draw(self, window, camera):
 		window.blit(self.player_icon, (self.x, self.y - camera.y))
 
-	def update(self):
-		self.x += self.vel_x
-		self.y += self.vel_y
-		self.vel_y += GRAVITY
-		if self.vel_y > self.max_falling_speed:
-			self.vel_y = self.max_falling_speed
+	def update(self, platform_controller):
+		platform = self.get_platform_player_standing(platform_controller)
+		if platform:
+			self.speed_x = platform.speed_x
+		else:
+			self.speed_x = 0
+
+		self.x += self.speed_x
+		self.y += self.speed_y
+		self.speed_y += GRAVITY
+		if self.speed_y > self.max_falling_speed:
+			self.speed_y = self.max_falling_speed
 		if self.x <= 0:
 			self.x = 0
 		if self.x + self.width >= W:
 			self.x = W - self.width
 
+	def get_platform_player_standing(self, platform_controller):
+		for p in platform_controller.platform_set:
+			if self.on_platform(p):
+				return p
+			else:
+				return None
+
 	def on_platform(self, platform):
-		# return platform.rect.top <= self.y + self.height
 		return platform.rect.collidepoint((self.x, self.y + self.height)) or \
 			platform.rect.collidepoint((self.x+self.width, self.y + self.height))
 
@@ -58,7 +69,7 @@ class Player:
 		return False
 
 	def collide_platform(self, platform, index):
-		for i in range(0,self.vel_y):
+		for i in range(0,self.speed_y):
 			if pygame.Rect(self.x, self.y-i, self.width, self.height).colliderect(platform.rect):
 				if platform.rect.collidepoint((self.x, self.y + self.height-i)) or \
 		 	platform.rect.collidepoint((self.x+self.width, self.y + self.height-i)): #do not change! no on_platform here
@@ -68,9 +79,6 @@ class Player:
 						if self.score < index * 10:
 							self.score = index * 10
 						platform.collected_score = True
-
-#	def get_rect(self):
-#		return pygame.Rect(self.x, self.y, self.width, self.height)
 
 	def fallen_off_screen(self, camera):
 		if self.y - camera.y + self.height >= H:

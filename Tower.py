@@ -12,12 +12,12 @@ white = (255,255,255)
 
 #window
 pygame.init()
-H = 600
-W = 650
+H = 650
+W = 600
 GRAVITY = 1
-JUMP_VELOCITY = 15
+JUMP_SPEED = 15
 MAX_JUMP = 150
-window = pygame.display.set_mode((H, W))
+window = pygame.display.set_mode((W, H))
 window.fill(background)
 
 #title and icon
@@ -57,12 +57,12 @@ while True:
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_SPACE]:
             if player.on_any_platform(platform_controller, floor):
-                if player.vel_y >= JUMP_VELOCITY/2:
-                    player.vel_y = -JUMP_VELOCITY
+                if player.speed_y >= JUMP_SPEED/2:
+                    player.speed_y = -JUMP_SPEED
 
-        player.update()
         platform_controller.update()
         player.collide_platform(floor,0)
+        player.update(platform_controller)
         platform_controller.collide_set(player)
         platform_controller.score = player.score
         camera.update(player.score)
